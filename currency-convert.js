@@ -29,10 +29,37 @@ const getCountries = async (currencyCode) => {
     return response.data.map((country) => country.name );
 };
 
-getCountries('INR').then((countries)=> {
-  console.log(countries);
+// const convertCurrency = (from ,  to,  amount) => {
+//   let convertedAmount;
+//   return getExchangeRate(from,to).then((rate) =>{
+//     convertedAmount = (amount*rate).toFixed(2);
+//     //console.log(convertedAmount);
+//     return getCountries(to);
+//   }).then((countries) => {
+//       //console.log(countries);
+//       return `${amount} ${from} is worth ${convertedAmount} ${to}. We can spend it in following countries : ${countries.join(', ')} `;
+//   });
+// };
+
+//async version
+const convertCurrency = async (from ,  to,  amount) => {
+
+  const rate = await getExchangeRate(from,to)
+  const countries = await getCountries(to);
+  const convertedAmount = (amount*rate).toFixed(2);
+  return `${amount} ${from} is worth ${convertedAmount} ${to}. We can spend it in following countries : ${countries.join(', ')} `;
+};
+
+convertCurrency('USD','EUR',20).then((message) => {
+  console.log(message)
+}).catch((e) => {
+  console.log('Invalid country');
 });
 
-getExchangeRate('USD','CAD').then((rate) => {
-  console.log(rate);
-});
+// getCountries('INR').then((countries)=> {
+//   console.log(countries);
+// });
+//
+// getExchangeRate('USD','CAD').then((rate) => {
+//   console.log(rate);
+// });
